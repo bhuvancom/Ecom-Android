@@ -1,0 +1,21 @@
+package com.tcs.ecom.utility
+
+import com.tcs.ecom.models.Users
+
+/**
+@author Bhuvaneshvar
+Date    7/18/2021
+Time    3:17 PM
+Projext Ecom
+ */
+public object Constants {
+    const val QUERY = "QUERY"
+    var CURRENT_USER: Users? = null
+    const val USER_DETAIL = "USER"
+    const val MY_SHARED_PREF = "ECOM"
+    const val CHANNEL_ID = "Ecom General"
+    const val CHANNEL_ID_WITHOUT_SOUND = "Ecom Low priority"
+    const val CHANNEL_ID_STICKY = "Ecom High"
+
+
+}

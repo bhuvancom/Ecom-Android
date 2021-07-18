@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_app_navigation"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.tcs.ecom.ui.main.home.HomeFragment"
+        android:label="Home"
+        tools:layout="@layout/fragment_home" />
+    <fragment
+        android:id="@+id/cartFragment"
+        android:name="com.tcs.ecom.ui.main.cart.CartFragment"
+        android:label="Cart"
+        tools:layout="@layout/fragment_cart" />
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.tcs.ecom.ui.main.search.SearchFragment"
+        android:label="Search"
+        tools:layout="@layout/fragment_search" />
+    <fragment
+        android:id="@+id/settingFragment"
+        android:name="com.tcs.ecom.ui.main.setting.SettingFragment"
+        android:label="Setting"
+        tools:layout="@layout/fragment_setting" />
+    <activity
+        android:id="@+id/ecomAppActivity"
+        android:name="com.tcs.ecom.ui.main.EcomAppActivity"
+        android:label="Ecom App"
+        tools:layout="@layout/activity_ecom_app" />
+</navigation>
