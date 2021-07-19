@@ -14,4 +14,7 @@
     <string name="result_could_not_be_loaded">Result could not be loaded</string>
     <string name="retry">Retry</string>
     <string name="no_result_found_for_this_query">No Result found for this query</string>
+    <string name="checkout">Checkout</string>
+    <string name="no_item_in_cart">No Item In Cart</string>
+    <string name="error_loading">Error Loading Data</string>
 </resources>

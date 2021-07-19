@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="150dp"
     android:layout_margin="8dp"
-    app:cardCornerRadius="16dp"
+    android:padding="8dp"
+    app:cardCornerRadius="8dp"
     app:cardElevation="8dp">
 
     <RelativeLayout
@@ -16,11 +17,11 @@
             android:id="@+id/iv_product_image"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
             android:contentDescription="@string/app_name"
-            android:cropToPadding="true"
+            android:padding="4dp"
             android:scaleType="centerInside"
-            tools:src="@drawable/ic_baseline_shopping_cart_24" />
+            android:src="@drawable/ic_baseline_shopping_cart_24" />
 
         <TextView
             android:id="@+id/tv_name"
@@ -28,7 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_toEndOf="@id/iv_product_image"
             android:padding="4dp"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
             tools:text="Samsung tv" />
 
         <TextView
@@ -38,14 +39,29 @@
             android:layout_below="@id/tv_name"
             android:layout_toEndOf="@id/iv_product_image"
             android:padding="4dp"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
             tools:text="Rs. 150" />
 
-        <Button
-            android:id="@+id/add_to_cart"
+        <TextView
+            android:id="@+id/tv_quantity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:text="@string/add_to_cart" />
+            android:layout_below="@id/tv_price"
+            android:layout_toEndOf="@id/iv_product_image"
+            android:padding="4dp"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+            tools:text="2" />
+
+        <TextView
+            android:id="@+id/tv_total"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_quantity"
+            android:layout_toEndOf="@id/iv_product_image"
+            android:padding="4dp"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+            tools:text="₹ 400" />
+
+
     </RelativeLayout>
 </androidx.cardview.widget.CardView>

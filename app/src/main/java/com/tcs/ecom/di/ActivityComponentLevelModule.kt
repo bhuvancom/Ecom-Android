@@ -2,8 +2,10 @@ package com.tcs.ecom.di
 
 import com.tcs.ecom.BuildConfig
 import com.tcs.ecom.api.AuthenticationApi
+import com.tcs.ecom.api.CartApi
 import com.tcs.ecom.api.ProductApi
 import com.tcs.ecom.repository.AuthenticationRepository
+import com.tcs.ecom.repository.CartRepository
 import com.tcs.ecom.repository.ProductRepository
 import dagger.Module
 import dagger.Provides
@@ -19,7 +21,7 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object ActivityComponentLevelModule {
-    private const val BASE_URL = "http://192.168.1.100:5000/api/"
+    private const val BASE_URL = "http://192.168.1.102:5000/api/"
 
     @Provides
     @Singleton
@@ -55,7 +57,7 @@ object ActivityComponentLevelModule {
 
     @Provides
     @Singleton
-    fun providesAuthRepo(authenticationApi: AuthenticationApi) =
+    fun providesAuthRepo(authenticationApi: AuthenticationApi): AuthenticationRepository =
         AuthenticationRepository(authenticationApi)
 
     @Provides
@@ -64,5 +66,14 @@ object ActivityComponentLevelModule {
 
     @Provides
     @Singleton
-    fun providesProductRepo(productApi: ProductApi) = ProductRepository(productApi)
+    fun providesProductRepo(productApi: ProductApi): ProductRepository =
+        ProductRepository(productApi)
+
+    @Provides
+    @Singleton
+    fun providesCartApi(retrofit: Retrofit): CartApi = retrofit.create(CartApi::class.java)
+
+    @Provides
+    @Singleton
+    fun providesCartRepository(cartApi: CartApi): CartRepository = CartRepository(cartApi)
 }

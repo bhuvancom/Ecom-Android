@@ -3,11 +3,11 @@ package com.tcs.ecom.ui.auth
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.gson.Gson
-import com.tcs.ecom.models.Error
+import com.tcs.ecom.models.ApiError
 import com.tcs.ecom.models.Users
 import com.tcs.ecom.repository.AuthenticationRepository
 import com.tcs.ecom.utility.ApiResultState
+import com.tcs.ecom.utility.Util
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -45,27 +45,14 @@ class AuthenticationViewModel @Inject constructor(private val authenticationRepo
 
                 } else {
                     login.errorBody()?.apply {
-                        try {
-                            val gson = Gson()
-                            val err = this.string()
-                            val error = gson.fromJson(err, Error::class.java)
-                            _loginState.tryEmit(ApiResultState.ERROR(error))
-                        } catch (e: Exception) {
-                            Log.e(TAG, "doLogin: converting to error -> error $e")
-                            _loginState.tryEmit(
-                                ApiResultState.ERROR(
-                                    Error(
-                                        "Please check you email or password",
-                                        500
-                                    )
-                                )
-                            )
-                        }
+                        val error = this.string()
+                        val apiError = Util.getApiError(error)
+                        _loginState.tryEmit(ApiResultState.ERROR(apiError))
                     }
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "doLogin: $e")
-                _loginState.emit(ApiResultState.ERROR(Error("${e.message}", 500)))
+                _loginState.emit(ApiResultState.ERROR(ApiError("${e.message}", 500)))
             }
 
         }
@@ -85,27 +72,14 @@ class AuthenticationViewModel @Inject constructor(private val authenticationRepo
 
                 } else {
                     response.errorBody()?.apply {
-                        try {
-                            val gson = Gson()
-                            val err = this.string()
-                            val error = gson.fromJson(err, Error::class.java)
-                            _registrationState.tryEmit(ApiResultState.ERROR(error))
-                        } catch (e: Exception) {
-                            Log.e(TAG, "doLogin: converting to error -> error $e")
-                            _registrationState.tryEmit(
-                                ApiResultState.ERROR(
-                                    Error(
-                                        "Please check you email or password",
-                                        500
-                                    )
-                                )
-                            )
-                        }
+                        val error = this.string()
+                        val apiError = Util.getApiError(error)
+                        _registrationState.tryEmit(ApiResultState.ERROR(apiError))
                     }
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "doLogin: $e")
-                _registrationState.emit(ApiResultState.ERROR(Error("${e.message}", 500)))
+                _registrationState.emit(ApiResultState.ERROR(ApiError("${e.message}", 500)))
             }
         }
     }

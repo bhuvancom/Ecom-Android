@@ -22,9 +22,10 @@ class ProductViewModel @Inject constructor(
     ViewModel() {
     private val currentSearch = MutableLiveData("")
 
-    val products = currentSearch.switchMap {
-        productRepository.getProducts(it).cachedIn(viewModelScope)
-    }
+    val products
+        get() = currentSearch.switchMap {
+            productRepository.getProducts(it).cachedIn(viewModelScope)
+        }
 
     fun setSearch(query: String) {
         currentSearch.value = query

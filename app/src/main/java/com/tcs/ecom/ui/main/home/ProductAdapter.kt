@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 import com.tcs.ecom.databinding.ItemProductBinding
 import com.tcs.ecom.models.Product
+import com.tcs.ecom.utility.Constants
 
 /**
 @author Bhuvaneshvar
@@ -16,8 +17,8 @@ Time    8:52 PM
 Project Ecom
  */
 class ProductAdapter(
-    private val onProductClick: (Long) -> Unit,
-    private val onAddToCartClick: (Long) -> Unit
+    private inline val onProductClick: (Long) -> Unit,
+    private inline val onAddToCartClick: (Product) -> Unit
 ) : PagingDataAdapter<Product, ProductAdapter.ProductViewHolder>(productComparator) {
 
     inner class ProductViewHolder(private val binding: ItemProductBinding) :
@@ -27,10 +28,10 @@ class ProductAdapter(
                 Picasso.get().load(product.imgUrl)
                     .into(ivProductImage)
                 tvName.text = product.name
-                tvPrice.text = "${product.price}"
+                tvPrice.text = "${Constants.RUPPEE} ${product.price}"
                 product.id?.let {
                     addToCart.setOnClickListener {
-                        onAddToCartClick(product.id!!)
+                        onAddToCartClick(product)
                     }
                 }
             }

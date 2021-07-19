@@ -51,7 +51,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                         }
 
                         is ApiResultState.ERROR -> {
-                            Log.d(TAG, "onViewCreated: ${it.error}")
+                            Log.d(TAG, "onViewCreated: ${it.apiError}")
                             Util.showAlert(
                                 requireContext(),
                                 onYes = {
@@ -59,7 +59,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                                 },
                                 onNo = {},
                                 "Error Login",
-                                it.error.reason + "\nRetry?"
+                                it.apiError.reason + "\nRetry?"
                             )
                         }
 

@@ -51,7 +51,7 @@ class RegistrationFragment : Fragment(R.layout.fragment_registration) {
                         }
 
                         is ApiResultState.ERROR -> {
-                            Log.d(TAG, "onViewCreated: ${it.error}")
+                            Log.d(TAG, "onViewCreated: ${it.apiError}")
                             Util.showAlert(
                                 requireContext(),
                                 onYes = {
@@ -59,7 +59,7 @@ class RegistrationFragment : Fragment(R.layout.fragment_registration) {
                                 },
                                 onNo = {},
                                 "Error Registering",
-                                it.error.reason + "\nRetry?"
+                                it.apiError.reason + "\nRetry?"
                             )
                         }
 

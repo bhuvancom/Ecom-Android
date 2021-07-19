@@ -6,9 +6,14 @@ import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.paging.LoadState
+import androidx.recyclerview.widget.GridLayoutManager
 import com.tcs.ecom.R
 import com.tcs.ecom.databinding.FragmentHomeBinding
+import com.tcs.ecom.ui.main.cart.CartViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -26,17 +31,20 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private val productViewModel by viewModels<ProductViewModel>()
-
+    private val cartViewModel by viewModels<CartViewModel>()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentHomeBinding.bind(view)
-
         setupRecyclerView()
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
     }
 
     private fun setupRecyclerView() {
         val adapterPaging = ProductAdapter(onAddToCartClick = {
-            Log.d(TAG, "setupRecyclerView: add to cart $it")
+            cartViewModel.addToCart(it)
         }, onProductClick = {
             Log.d(TAG, "setupRecyclerView: product clicked  $it")
         })
@@ -47,11 +55,15 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 footer = ProductLoadStateAdapter { adapterPaging.retry() }
             )
             setHasFixedSize(true)
-            itemAnimator = null
+            layoutManager = GridLayoutManager(requireContext(), 2)
         }
 
-        productViewModel.products.observe(viewLifecycleOwner) { pagingData ->
-            adapterPaging.submitData(viewLifecycleOwner.lifecycle, pagingData)
+        lifecycleScope.launchWhenCreated {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
+                productViewModel.products.observe(viewLifecycleOwner) { pagingData ->
+                    adapterPaging.submitData(viewLifecycleOwner.lifecycle, pagingData)
+                }
+            }
         }
 
         adapterPaging.addLoadStateListener { combinedLoadStates ->

@@ -66,7 +66,7 @@ class MainActivity : AppCompatActivity() {
                         is ApiResultState.ERROR -> {
                             Toast.makeText(
                                 this@MainActivity,
-                                "Error ${it.error.reason}",
+                                "Error ${it.apiError.reason}",
                                 Toast.LENGTH_LONG
                             )
                                 .show()
