@@ -26,9 +26,21 @@ class CartViewModel @Inject constructor(private val cartRepository: CartReposito
     }
 
     private val _cart = MutableLiveData<ApiResultState<CartResponse>>()
-    val cart: LiveData<ApiResultState<CartResponse>> = _cart
+    val cart: LiveData<ApiResultState<CartResponse>> get() = _cart
 
-    fun getUserCart(userId: Long) {
+    init {
+        loadInitialCart()
+    }
+
+    fun retry() {
+        loadInitialCart()
+    }
+
+    private fun loadInitialCart() {
+        getUserCart(Constants.CURRENT_USER.value!!.id!!)
+    }
+
+    private fun getUserCart(userId: Long) {
         viewModelScope.launch {
             _cart.postValue(ApiResultState.START)
             try {
@@ -53,7 +65,7 @@ class CartViewModel @Inject constructor(private val cartRepository: CartReposito
     /**
      * This will save one cart of the user.
      */
-    fun upserCart(productForm: ProductForm) {
+    private fun upserCart(productForm: ProductForm) {
         viewModelScope.launch {
             _cart.postValue(ApiResultState.START)
             try {
@@ -77,13 +89,25 @@ class CartViewModel @Inject constructor(private val cartRepository: CartReposito
     }
 
     fun addToCart(product: Product) {
+
+        if (Constants.CUURENT_CART.value == null) {
+            val cartResponse = CartResponse(users = Constants.CURRENT_USER.value!!)
+            Constants.CUURENT_CART.postValue(cartResponse)
+        }
+
         Constants.CUURENT_CART.value?.let {
-            
+            val orderForm = OrderForm(product)
+            val addItemToCart = Util.addItemToCart(orderForm, it)
+            val productForm = ProductForm(
+                addItemToCart.cartItems,
+                addItemToCart.users
+            )
+            upserCart(productForm)
         }
     }
 
     fun removeProductFromCart(orderForm: OrderForm) {
-        //todo this is working fine but server is not able to remove from db check
+
         Constants.CUURENT_CART.value?.let {
             val removeProductFromCart = Util.removeProductFromCart(orderForm, it)
             val productForm = ProductForm(

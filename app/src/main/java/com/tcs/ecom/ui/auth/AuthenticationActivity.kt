@@ -47,7 +47,7 @@ class AuthenticationActivity : AppCompatActivity() {
             putString(Constants.USER_DETAIL, user)
             commit()
         }
-        Constants.CURRENT_USER = users
+        Constants.CURRENT_USER.postValue(users)
         val intent = Intent(this, EcomAppActivity::class.java)
         startActivity(intent)
         finishAffinity()

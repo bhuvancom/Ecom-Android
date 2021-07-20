@@ -42,7 +42,6 @@ class AuthenticationViewModel @Inject constructor(private val authenticationRepo
                     val user = login.body()!!
                     user.password = password
                     _loginState.tryEmit(ApiResultState.SUCCESS(user))
-
                 } else {
                     login.errorBody()?.apply {
                         val error = this.string()

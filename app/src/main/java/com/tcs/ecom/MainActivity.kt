@@ -60,7 +60,7 @@ class MainActivity : AppCompatActivity() {
                 authViewModel.loginState.collectLatest {
                     when (it) {
                         is ApiResultState.SUCCESS -> {
-                            Constants.CURRENT_USER = it.result
+                            Constants.CURRENT_USER.postValue(it.result)
                             openMain()
                         }
                         is ApiResultState.ERROR -> {
@@ -97,7 +97,7 @@ class MainActivity : AppCompatActivity() {
             this.remove(Constants.USER_DETAIL)
             commit()
         }
-        Constants.CURRENT_USER = null
+        Constants.CURRENT_USER.postValue(null)
 
         val intent = Intent(this, AuthenticationActivity::class.java)
         startActivity(intent)

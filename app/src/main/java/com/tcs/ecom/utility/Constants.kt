@@ -12,7 +12,7 @@ Project Ecom
  */
 public object Constants {
     const val QUERY = "QUERY"
-    var CURRENT_USER: Users? = null
+    var CURRENT_USER: MutableLiveData<Users> = MutableLiveData()
     const val USER_DETAIL = "USER"
     const val MY_SHARED_PREF = "ECOM"
     const val CHANNEL_ID = "Ecom General"

@@ -11,6 +11,8 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.navigateUp
+import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.tcs.ecom.R
 import com.tcs.ecom.databinding.ActivityEcomAppBinding
@@ -30,6 +32,7 @@ class EcomAppActivity : AppCompatActivity() {
     private var _binding: ActivityEcomAppBinding? = null
     private val binding get() = _binding!!
     private lateinit var navController: NavController
+    private lateinit var appBarConfiguration: AppBarConfiguration
     private val cartViewModel by viewModels<CartViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,21 +40,25 @@ class EcomAppActivity : AppCompatActivity() {
 
         setContentView(binding.root)
 
-        if (Constants.CURRENT_USER == null) {
-            Toast.makeText(this, "User not found", Toast.LENGTH_LONG).show()
-            super.onBackPressed()
-            return
+        Constants.CURRENT_USER.observe(this) {
+            if (it == null) {
+                Toast.makeText(this, "User not found", Toast.LENGTH_LONG).show()
+                super.onBackPressed()
+            }
         }
+
 
         navController = supportFragmentManager.findFragmentById(R.id.navHostFragMain)
             ?.findNavController() as NavHostController
-        val appBar = AppBarConfiguration(navController.graph)
-        //setupActionBarWithNavController(navController, appBar)
+        appBarConfiguration = AppBarConfiguration(navController.graph)
+        setupActionBarWithNavController(navController, appBarConfiguration)
         binding.mainBottomBar.setupWithNavController(navController)
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.RESUMED) {
-                cartViewModel.getUserCart(Constants.CURRENT_USER!!.id!!)
+                cartViewModel.cart.observe(this@EcomAppActivity) {
+
+                }
             }
         }
 
@@ -59,6 +66,10 @@ class EcomAppActivity : AppCompatActivity() {
             updateCartBadge(it.numberOfProducts.toInt())
         })
 
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        return navController.navigateUp(appBarConfiguration)
     }
 
     companion object {

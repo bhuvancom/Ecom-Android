@@ -55,7 +55,6 @@ dependencies {
     def arch_version = "2.1.0"
     // optional - helpers for implementing LifecycleOwner in a Service
     implementation "androidx.lifecycle:lifecycle-service:$lifecycle_version"
-
     // optional - ProcessLifecycleOwner provides a lifecycle for the whole application process
     implementation "androidx.lifecycle:lifecycle-process:$lifecycle_version"
     // ViewModel
@@ -72,8 +71,16 @@ dependencies {
     implementation "com.squareup.picasso:picasso:$picasoo"
 
     // Navigation Components
-    implementation "androidx.navigation:navigation-fragment-ktx:2.3.5"
-    implementation "androidx.navigation:navigation-ui-ktx:2.3.5"
+    implementation "androidx.navigation:navigation-runtime-ktx:2.4.0-alpha04"
+    implementation "androidx.navigation:navigation-fragment-ktx:2.4.0-alpha04"
+    implementation "androidx.navigation:navigation-ui-ktx:2.4.0-alpha04"
+
+    def fragment = "1.4.0-alpha04"
+    //implementation "androidx.fragment:fragment-ktx:$fragment"
+    implementation "androidx.fragment:fragment-ktx:$fragment"
+
+    //ktx livedata
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.4.0-alpha02"
 
     //retrofit
     def retrofit = '2.9.0'
