@@ -45,7 +45,6 @@ class ProductPaging @Inject constructor(
             LoadResult.Error(e)
         }
 
-
     }
 
     companion object {

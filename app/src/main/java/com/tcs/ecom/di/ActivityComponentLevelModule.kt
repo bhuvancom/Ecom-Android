@@ -3,9 +3,11 @@ package com.tcs.ecom.di
 import com.tcs.ecom.BuildConfig
 import com.tcs.ecom.api.AuthenticationApi
 import com.tcs.ecom.api.CartApi
+import com.tcs.ecom.api.OrderApi
 import com.tcs.ecom.api.ProductApi
 import com.tcs.ecom.repository.AuthenticationRepository
 import com.tcs.ecom.repository.CartRepository
+import com.tcs.ecom.repository.OrderRepository
 import com.tcs.ecom.repository.ProductRepository
 import dagger.Module
 import dagger.Provides
@@ -21,7 +23,7 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object ActivityComponentLevelModule {
-    private const val BASE_URL = "http://192.168.1.100:5000/api/"
+    private val BASE_URL = "http://192.168.1.100:5000/api/"
 
     @Provides
     @Singleton
@@ -76,4 +78,12 @@ object ActivityComponentLevelModule {
     @Provides
     @Singleton
     fun providesCartRepository(cartApi: CartApi): CartRepository = CartRepository(cartApi)
+
+    @Provides
+    @Singleton
+    fun providesOrderApi(retrofit: Retrofit): OrderApi = retrofit.create(OrderApi::class.java)
+
+    @Provides
+    @Singleton
+    fun providesOrderRepo(orderApi: OrderApi) = OrderRepository(orderApi)
 }

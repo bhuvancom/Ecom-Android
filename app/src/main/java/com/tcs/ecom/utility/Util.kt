@@ -7,6 +7,7 @@ import com.google.gson.Gson
 import com.tcs.ecom.models.ApiError
 import com.tcs.ecom.models.CartResponse
 import com.tcs.ecom.models.OrderForm
+import retrofit2.Response
 
 /**
 @author Bhuvaneshvar
@@ -16,14 +17,31 @@ Project Ecom
  */
 object Util {
 
-    //    suspend fun <T> doSafeCall(work: suspend ((T) -> Unit), dispatcher: CoroutineDispatcher) =
-//        CoroutineScope(dispatcher).launch {
-//            try {
-//                work(T)
-//            } catch (error: Exception) {
-//
-//            }
-//        }
+    /**
+     * @param work Work which returns reponse
+     * @param K type or response
+     */
+    suspend fun <K> doSafeCall(
+        work: suspend () -> Response<K>,
+    ): ApiResultState<K> {
+        return try {
+            val response = work()
+            return if (response.isSuccessful && response.body() != null) {
+                ApiResultState.SUCCESS(response.body()!!)
+            } else {
+                response.errorBody()?.apply {
+                    val error = this.string()
+                    val apiError = getApiError(error)
+                    return ApiResultState.ERROR(apiError)
+                }
+                ApiResultState.ERROR(ApiError("Error occurred in application", 500))
+            }
+        } catch (error: Exception) {
+            ApiResultState.ERROR(ApiError("${error.message}", 500))
+        }
+
+    }
+
     private const val TAG = "Util"
     fun getApiError(string: String): ApiError {
         val gson = Gson()

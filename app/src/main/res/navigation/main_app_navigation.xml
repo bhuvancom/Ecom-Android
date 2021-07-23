@@ -24,10 +24,19 @@
         android:id="@+id/settingFragment"
         android:name="com.tcs.ecom.ui.main.setting.SettingFragment"
         android:label="Setting"
-        tools:layout="@layout/fragment_setting" />
+        tools:layout="@layout/fragment_setting">
+        <action
+            android:id="@+id/action_settingFragment_to_orderFragment"
+            app:destination="@id/orderFragment" />
+    </fragment>
     <activity
         android:id="@+id/ecomAppActivity"
         android:name="com.tcs.ecom.ui.main.EcomAppActivity"
         android:label="Ecom App"
         tools:layout="@layout/activity_ecom_app" />
+    <fragment
+        android:id="@+id/orderFragment"
+        android:name="com.tcs.ecom.ui.main.setting.orders.OrderFragment"
+        android:label="My Orders"
+        tools:layout="@layout/fragment_orders" />
 </navigation>

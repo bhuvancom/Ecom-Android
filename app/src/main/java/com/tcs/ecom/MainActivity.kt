@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.edit
@@ -18,6 +17,7 @@ import com.tcs.ecom.ui.auth.AuthenticationViewModel
 import com.tcs.ecom.ui.main.EcomAppActivity
 import com.tcs.ecom.utility.ApiResultState
 import com.tcs.ecom.utility.Constants
+import com.tcs.ecom.utility.Util
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 
@@ -64,13 +64,25 @@ class MainActivity : AppCompatActivity() {
                             openMain()
                         }
                         is ApiResultState.ERROR -> {
-                            Toast.makeText(
+//                            Toast.makeText(
+//                                this@MainActivity,
+//                                "Error ${it.apiError.reason}",
+//                                Toast.LENGTH_LONG
+//                            )
+//                                .show()
+//                            openAuth()
+
+                            Util.showAlert(
                                 this@MainActivity,
-                                "Error ${it.apiError.reason}",
-                                Toast.LENGTH_LONG
+                                onYes = {
+                                    authViewModel.doLogin(user.email, user.password)
+                                },
+                                onNo = {
+                                    openAuth()
+                                },
+                                "Error Login",
+                                it.apiError.reason + "\nRetry? on cancel to open login screen"
                             )
-                                .show()
-                            openAuth()
                         }
                         is ApiResultState.LOADING -> {
 

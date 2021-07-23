@@ -17,7 +17,7 @@ class ProductRepository @Inject constructor(private val productApi: ProductApi) 
     fun getProducts(query: String) = Pager(
         config = PagingConfig(
             pageSize = 5,
-            maxSize = 200,
+            maxSize = 2000,
             enablePlaceholders = false
         ),
         pagingSourceFactory = {
