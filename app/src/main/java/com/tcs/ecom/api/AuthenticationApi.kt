@@ -4,6 +4,7 @@ import com.tcs.ecom.models.Users
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.POST
+import retrofit2.http.Query
 import retrofit2.http.QueryMap
 
 /**
@@ -19,4 +20,10 @@ interface AuthenticationApi {
 
     @POST("users")
     suspend fun register(@Body users: Users): Response<Users>
+
+    @POST("users/update")
+    suspend fun update(
+        @Body users: Users,
+        @Query("old_password") oldPass: String
+    ): Response<Users>
 }

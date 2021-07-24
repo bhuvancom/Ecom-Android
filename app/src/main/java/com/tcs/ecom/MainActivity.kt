@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.edit
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -60,18 +59,11 @@ class MainActivity : AppCompatActivity() {
                 authViewModel.loginState.collectLatest {
                     when (it) {
                         is ApiResultState.SUCCESS -> {
+                            Util.addUserInSharedPref(this@MainActivity, it.result)
                             Constants.CURRENT_USER.postValue(it.result)
                             openMain()
                         }
                         is ApiResultState.ERROR -> {
-//                            Toast.makeText(
-//                                this@MainActivity,
-//                                "Error ${it.apiError.reason}",
-//                                Toast.LENGTH_LONG
-//                            )
-//                                .show()
-//                            openAuth()
-
                             Util.showAlert(
                                 this@MainActivity,
                                 onYes = {
@@ -80,7 +72,7 @@ class MainActivity : AppCompatActivity() {
                                 onNo = {
                                     openAuth()
                                 },
-                                "Error Login",
+                                "Error Login With saved details",
                                 it.apiError.reason + "\nRetry? on cancel to open login screen"
                             )
                         }
@@ -103,14 +95,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun openAuth() {
-
-        val sharedPreferences = getSharedPreferences(Constants.MY_SHARED_PREF, Context.MODE_PRIVATE)
-        sharedPreferences.edit {
-            this.remove(Constants.USER_DETAIL)
-            commit()
-        }
+        Util.removeUserFromSharedPref(this)
         Constants.CURRENT_USER.postValue(null)
-
         val intent = Intent(this, AuthenticationActivity::class.java)
         startActivity(intent)
         finishAffinity()

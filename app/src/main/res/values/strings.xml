@@ -17,4 +17,11 @@
     <string name="checkout">Checkout</string>
     <string name="no_item_in_cart">No Item In Cart</string>
     <string name="error_loading">Error Loading Data</string>
+    <string name="total">Total</string>
+    <string name="change_address">Change Address</string>
+    <string name="current_password">Current Password</string>
+    <string name="change_password">Change Password</string>
+    <string name="new_password">New Password</string>
+    <string name="update">Update</string>
+    <string name="cancel">Cancel</string>
 </resources>

@@ -13,4 +13,6 @@ Project Ecom
 class AuthenticationRepository @Inject constructor(private val authenticationApi: AuthenticationApi) {
     suspend fun login(emailPassMap: HashMap<String, String>) = authenticationApi.login(emailPassMap)
     suspend fun register(users: Users) = authenticationApi.register(users)
+    suspend fun update(users: Users, oldPass: String) =
+        authenticationApi.update(users, oldPass)
 }

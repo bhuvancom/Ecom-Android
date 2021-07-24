@@ -1,6 +1,8 @@
 package com.tcs.ecom.ui.main.home
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import androidx.core.view.isVisible
@@ -15,6 +17,10 @@ import com.tcs.ecom.R
 import com.tcs.ecom.databinding.FragmentHomeBinding
 import com.tcs.ecom.ui.main.cart.CartViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.util.*
 
 /**
 @author Bhuvaneshvar
@@ -54,6 +60,31 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 }
             }
         }
+
+        var job = Timer()
+        binding.etSearch.editText?.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                job.cancel()
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                job = Timer()
+                job.schedule(object : TimerTask() {
+                    override fun run() {
+                        CoroutineScope(Dispatchers.Main).launch {
+                            s?.let {
+                                productViewModel.setSearch(it.toString())
+                            }
+                        }
+                    }
+                }, 600L)
+            }
+
+        })
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

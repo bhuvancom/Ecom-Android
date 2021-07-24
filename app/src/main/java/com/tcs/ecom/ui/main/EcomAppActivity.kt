@@ -1,5 +1,6 @@
 package com.tcs.ecom.ui.main
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -16,8 +17,10 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.tcs.ecom.R
 import com.tcs.ecom.databinding.ActivityEcomAppBinding
+import com.tcs.ecom.ui.auth.AuthenticationActivity
 import com.tcs.ecom.ui.main.cart.CartViewModel
 import com.tcs.ecom.utility.Constants
+import com.tcs.ecom.utility.Util
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -42,8 +45,13 @@ class EcomAppActivity : AppCompatActivity() {
 
         Constants.CURRENT_USER.observe(this) {
             if (it == null) {
-                Toast.makeText(this, "User not found", Toast.LENGTH_LONG).show()
-                super.onBackPressed()
+                Util.removeUserFromSharedPref(this)
+                Toast.makeText(this, "User logged out", Toast.LENGTH_LONG).show()
+                val intent = Intent(this, AuthenticationActivity::class.java)
+                startActivity(intent)
+                finishAffinity()
+            } else {
+                Util.addUserInSharedPref(this, it)
             }
         }
 

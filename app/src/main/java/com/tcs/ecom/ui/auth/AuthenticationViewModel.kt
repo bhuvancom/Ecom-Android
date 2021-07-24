@@ -30,6 +30,19 @@ class AuthenticationViewModel @Inject constructor(private val authenticationRepo
     private val _registrationState = MutableStateFlow<ApiResultState<Users>>(ApiResultState.START)
     val registrationState: StateFlow<ApiResultState<Users>> get() = _registrationState
 
+    private val _updateState = MutableStateFlow<ApiResultState<Users>>(ApiResultState.START)
+    val updateState: StateFlow<ApiResultState<Users>> get() = _updateState
+
+    fun updateUserDetails(users: Users, currentPassword: String) {
+        viewModelScope.launch {
+            _updateState.emit(ApiResultState.LOADING)
+
+            _updateState.emit(Util.doSafeCall {
+                authenticationRepository.update(users, currentPassword)
+            })
+        }
+    }
+
     fun doLogin(email: String, password: String) {
         viewModelScope.launch {
             _loginState.emit(ApiResultState.LOADING)

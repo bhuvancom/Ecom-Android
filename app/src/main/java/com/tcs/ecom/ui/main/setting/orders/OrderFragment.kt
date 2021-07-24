@@ -9,6 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -43,7 +44,9 @@ class OrderFragment : Fragment(R.layout.fragment_orders) {
     private val orderViewModel by viewModels<OrderViewModel>()
 
     private fun handleClickOnOrder(orderResponse: SingleOrderResponse) {
-
+        val toShowOrderDetailsFragment =
+            OrderFragmentDirections.actionOrderFragmentToShowOrderDetailsFragment(orderResponse)
+        findNavController().navigate(toShowOrderDetailsFragment)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -83,6 +86,9 @@ class OrderFragment : Fragment(R.layout.fragment_orders) {
             setHasFixedSize(true)
             layoutManager =
                 LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        }
+        binding.btnRetry.setOnClickListener {
+            orderViewModel.getThisUserOrders(Constants.CURRENT_USER.value!!.id!!)
         }
         orderAdapter.addLoadStateListener { combinedLoadStates ->
             binding.apply {

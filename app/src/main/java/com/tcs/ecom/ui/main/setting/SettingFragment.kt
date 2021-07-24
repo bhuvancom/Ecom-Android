@@ -10,7 +10,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.tcs.ecom.R
 import com.tcs.ecom.databinding.FragmentSettingBinding
 import com.tcs.ecom.models.Screen
+import com.tcs.ecom.models.Screen.*
 import com.tcs.ecom.models.SettingsModel
+import com.tcs.ecom.utility.Constants
+import dagger.hilt.android.AndroidEntryPoint
 
 /**
 @author Bhuvaneshvar
@@ -18,23 +21,53 @@ Date    7/18/2021
 Time    7:37 PM
 Project Ecom
  */
+@AndroidEntryPoint
 class SettingFragment : Fragment(R.layout.fragment_setting) {
     companion object {
         private const val TAG = "SettingFragment"
     }
 
+    private val list by lazy {
+        listOf(
+            SettingsModel(
+                "Orders",
+                "Tap to open your orders",
+                ORDERS
+            ),
+            SettingsModel(
+                "Profile",
+                "Tap to open your profile",
+                PROFILE
+            ),
+            SettingsModel(
+                "Logout",
+                "Tap to logout", LOGOUT
+            )
+        )
+    }
     private var _binding: FragmentSettingBinding? = null
     private val binding get() = _binding!!
     private val settingsAdapter by lazy {
         SettingsAdapter(onClick = {
             handleScreen(it)
-        })
+        }, list)
     }
 
     private fun handleScreen(screen: Screen) {
         Log.d(TAG, "handleScreen: $screen")
-        if (screen == Screen.ORDERS) {
-            findNavController().navigate(R.id.action_settingFragment_to_orderFragment)
+        when (screen) {
+            ORDERS -> {
+                findNavController().navigate(R.id.action_settingFragment_to_orderFragment)
+            }
+            PROFILE -> {
+                val user = Constants.CURRENT_USER.value!!
+                val directions =
+                    SettingFragmentDirections.actionSettingFragmentToProfileFragment(user)
+                findNavController().navigate(directions)
+            }
+            LOGOUT -> {
+                Constants.CURRENT_USER.value = null
+            }
         }
     }
 
@@ -43,32 +76,6 @@ class SettingFragment : Fragment(R.layout.fragment_setting) {
         _binding = FragmentSettingBinding.bind(view)
 
         setupRecyclerView()
-
-        settingsAdapter.submitList(
-            listOf(
-                SettingsModel(
-                    "Orders",
-                    "Tap to open your orders",
-                    Screen.ORDERS
-                ),
-                SettingsModel(
-                    "Orders",
-                    "Tap to open your orders",
-                    Screen.ORDERS
-                ),
-                SettingsModel(
-                    "Orders",
-                    "Tap to open your orders",
-                    Screen.ORDERS
-                ),
-                SettingsModel(
-                    "Profile",
-                    "Tap to open your profile",
-                    Screen.PROFILE
-                ),
-            )
-        )
-
     }
 
     private fun setupRecyclerView() {

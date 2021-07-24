@@ -2,11 +2,14 @@ package com.tcs.ecom.utility
 
 import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.edit
 import com.google.gson.Gson
 import com.tcs.ecom.models.ApiError
 import com.tcs.ecom.models.CartResponse
 import com.tcs.ecom.models.OrderForm
+import com.tcs.ecom.models.Users
 import retrofit2.Response
 
 /**
@@ -40,6 +43,30 @@ object Util {
             ApiResultState.ERROR(ApiError("${error.message}", 500))
         }
 
+    }
+
+    fun addUserInSharedPref(context: Context, users: Users) {
+        val sharedPreferences =
+            context.getSharedPreferences(Constants.MY_SHARED_PREF, Context.MODE_PRIVATE)
+        val gson = Gson()
+        val user = gson.toJson(users).toString()
+        sharedPreferences.edit {
+            putString(Constants.USER_DETAIL, user)
+            commit()
+        }
+    }
+
+    fun removeUserFromSharedPref(context: Context) {
+        val sharedPreferences =
+            context.getSharedPreferences(Constants.MY_SHARED_PREF, Context.MODE_PRIVATE)
+        sharedPreferences.edit {
+            this.remove(Constants.USER_DETAIL)
+            commit()
+        }
+    }
+
+    fun showToast(context: Context, msg: String) {
+        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
     }
 
     private const val TAG = "Util"
@@ -97,13 +124,16 @@ object Util {
         message: String
     ) {
         AlertDialog.Builder(context)
-            .setPositiveButton("Yes") { _, _ ->
+            .setPositiveButton("Proceed") { w, _ ->
                 onYes()
+                w.dismiss()
+
             }
-            .setNegativeButton("No") { w, _ ->
+            .setNegativeButton("Cancel") { w, _ ->
                 onNo()
                 w.dismiss()
             }
+            .setCancelable(false)
             .setTitle(title)
             .setMessage(message)
             .show()

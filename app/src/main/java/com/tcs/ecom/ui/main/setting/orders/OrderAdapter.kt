@@ -1,13 +1,14 @@
 package com.tcs.ecom.ui.main.setting.orders
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.squareup.picasso.Picasso
 import com.tcs.ecom.databinding.ItemOrdersBinding
 import com.tcs.ecom.models.SingleOrderResponse
+import com.tcs.ecom.utility.Constants
 
 /**
 @author Bhuvaneshvar
@@ -18,22 +19,30 @@ Project Ecom
 class OrderAdapter(private val onClick: (SingleOrderResponse) -> Unit) :
     PagingDataAdapter<SingleOrderResponse, OrderAdapter.OrderViewHolder>(orderList) {
 
-    inner class OrderViewHolder(itemOrdersBinding: ItemOrdersBinding) :
+    inner class OrderViewHolder(private val itemOrdersBinding: ItemOrdersBinding) :
         RecyclerView.ViewHolder(itemOrdersBinding.root) {
 
         fun bind(singleOrderResponse: SingleOrderResponse) {
-            Log.d(TAG, "bind: ")
-            if (bindingAdapterPosition != RecyclerView.NO_POSITION) {
-                onClick(singleOrderResponse)
+            itemOrdersBinding.apply {
+                Picasso.get().load(singleOrderResponse.orderProducts[0].product.imgUrl)
+                    .into(ivProductImage)
+                tvStatusDate.text =
+                    "${singleOrderResponse.status} on ${singleOrderResponse.dateCreated}"
+                tvNumberOfProduct.text =
+                    "${singleOrderResponse.numberOfProducts} item(s) including ${singleOrderResponse.orderProducts[0].product.name}"
+                tvTotal.text = "Total : ${Constants.RUPPEE} ${singleOrderResponse.totalOrderPrice}"
             }
         }
     }
 
     override fun onBindViewHolder(holder: OrderViewHolder, position: Int) {
-        getItem(position)?.let {
+        getItem(position)?.let { item ->
             holder.bind(
-                it
+                item
             )
+            holder.itemView.setOnClickListener {
+                onClick(item)
+            }
         }
     }
 

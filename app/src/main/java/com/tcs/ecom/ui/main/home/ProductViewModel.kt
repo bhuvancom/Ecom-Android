@@ -30,7 +30,7 @@ class ProductViewModel @Inject constructor(
 
     private fun search() {
         result = currentSearch.switchMap {
-            productRepository.getProducts("").cachedIn(viewModelScope)
+            productRepository.getProducts(it).cachedIn(viewModelScope)
         }
     }
 

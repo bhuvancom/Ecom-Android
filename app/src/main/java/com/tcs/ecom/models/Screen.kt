@@ -8,6 +8,7 @@ Project Ecom
  */
 enum class Screen(val number: Int, val value: String) {
     ORDERS(1, "ORDERS"),
-    PROFILE(2, "PROFILE")
+    PROFILE(2, "PROFILE"),
+    LOGOUT(3, "LOGOUT")
 
 }
