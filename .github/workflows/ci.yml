@@ -10,7 +10,7 @@ on:
       - master
   pull_request:
 
-  workflow_request:
+  workflow_dispatch:
     - build
 
 jobs:
