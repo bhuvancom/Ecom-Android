@@ -40,10 +40,6 @@ class CartFragment : Fragment(R.layout.fragment_cart) {
         setupRecyclerView()
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     private fun setupRecyclerView() {
         binding.rvCart.apply {
             adapter = cartAdapter

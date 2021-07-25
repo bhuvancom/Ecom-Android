@@ -39,17 +39,20 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private val productViewModel by viewModels<ProductViewModel>()
     private val cartViewModel by viewModels<CartViewModel>()
     private val adapterPaging by lazy {
-        ProductAdapter(onAddToCartClick = {
-            cartViewModel.addToCart(it)
-        }, onProductClick = {
-            Log.d(TAG, "setupRecyclerView: product clicked  $it")
-        })
+        ProductAdapter(
+            onAddToCartClick = {
+                cartViewModel.addToCart(it)
+            },
+            onProductClick = {
+                Log.d(TAG, "setupRecyclerView: product clicked  $it")
+            }
+        )
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentHomeBinding.bind(view)
-        //productViewModel.setSearch("")
+        // productViewModel.setSearch("")
 
         setupRecyclerView()
 
@@ -64,7 +67,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         var job = Timer()
         binding.etSearch.editText?.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
@@ -73,27 +75,26 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
             override fun afterTextChanged(s: Editable?) {
                 job = Timer()
-                job.schedule(object : TimerTask() {
-                    override fun run() {
-                        CoroutineScope(Dispatchers.Main).launch {
-                            s?.let {
-                                productViewModel.setSearch(it.toString())
+                job.schedule(
+                    object : TimerTask() {
+                        override fun run() {
+                            CoroutineScope(Dispatchers.Main).launch {
+                                s?.let {
+                                    productViewModel.setSearch(it.toString())
+                                }
                             }
                         }
-                    }
-                }, 600L)
+                    },
+                    600L
+                )
             }
-
         })
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
-
-
     private fun setupRecyclerView() {
+        binding.btnRetry.setOnClickListener {
+            adapterPaging.retry()
+        }
 
         binding.homeRecyclerView.apply {
             adapter = adapterPaging.withLoadStateHeaderAndFooter(
@@ -124,7 +125,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     tvNoResult.isVisible = false
                 }
             }
-
         }
     }
 }

@@ -15,17 +15,16 @@ buildscript {
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:2.3.5"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath 'com.google.dagger:hilt-android-gradle-plugin:2.37'
-  //      classpath "org.jetbrains.dokka:dokka-gradle-plugin:$dokkaVersion"
+        //      classpath "org.jetbrains.dokka:dokka-gradle-plugin:$dokkaVersion"
 //        classpath "org.jetbrains.kotlinx:binary-compatibility-validator:0.6.0"
         classpath "org.jlleitschuh.gradle:ktlint-gradle:7.1.0"
+        classpath 'com.diffplug.spotless:spotless-plugin-gradle:3.27.0'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
 }
 
-plugins {
-    id 'com.diffplug.spotless' version '5.7.0'
-}
+
 
 allprojects {
     repositories {
@@ -38,7 +37,8 @@ allprojects {
     task checkstyle(type: Checkstyle) {
         showViolations = true
         configFile file("../settings/checkstyle.xml")
-        source 'src/main/java'
+        source('src/main/java/**')
+        source 'src/main/java/**'
         include '**/*.java'
         exclude '**/gen/**'
         exclude '**/R.java'
@@ -47,36 +47,4 @@ allprojects {
         // empty classpath
         classpath = files()
     }
-
-    apply plugin: 'com.diffplug.spotless'
-
-    spotless {
-        kotlin {
-            target '**/*.kt'
-            targetExclude("$buildDir/**/*.kt")
-            targetExclude('bin/**/*.kt')
-
-            ktlint("0.40.0")
-            licenseHeaderFile rootProject.file('spotless/copyright.kt')
-        }
-    }
 }
-
-//if (JavaVersion.current().isJava8Compatible()) {
-//    allprojects {
-//        tasks.withType(Javadoc) {
-//            options.addStringOption('Xdoclint:none', '-quiet')
-//        }
-//    }
-//}
-
-//apply plugin: 'binary-compatibility-validator'
-//apply plugin: 'org.jetbrains.dokka'
-
-//tasks.dokkaHtmlMultiModule.configure {
-//    outputDirectory = new File("${project.rootDir}/docs")
-//}
-
-//task clean(type: Delete) {
-//    delete rootProject.buildDir
-//}

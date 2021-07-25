@@ -17,5 +17,4 @@ data class OrderResponse(
     val totalPage: Int,
     @SerializedName("number")
     val currentPage: Int
-) {
-}
+)

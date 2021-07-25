@@ -15,7 +15,7 @@ Time    10:01 PM
 Project Ecom
  */
 class SettingsAdapter(
-    private val onClick: (Screen) -> Unit,
+    private inline val onClick: (Screen) -> Unit,
     private val options: List<SettingsModel>
 ) :
     RecyclerView.Adapter<SettingsAdapter.SettingViewHolder>() {
@@ -23,7 +23,7 @@ class SettingsAdapter(
     inner class SettingViewHolder(val binding: ItemSettingsBinding) :
         RecyclerView.ViewHolder(binding.root) {
         init {
-            Log.d(TAG, "pos:${absoluteAdapterPosition} ")
+            Log.d(TAG, "pos:$absoluteAdapterPosition ")
             if (absoluteAdapterPosition != RecyclerView.NO_POSITION) {
                 binding.root.setOnClickListener {
                     onClick(options[bindingAdapterPosition].screen)

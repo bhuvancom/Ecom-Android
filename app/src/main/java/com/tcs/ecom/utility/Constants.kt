@@ -10,7 +10,7 @@ Date    7/18/2021
 Time    3:17 PM
 Project Ecom
  */
-public object Constants {
+object Constants {
     const val QUERY = "QUERY"
     var CURRENT_USER: MutableLiveData<Users> = MutableLiveData()
     const val USER_DETAIL = "USER"
@@ -20,6 +20,4 @@ public object Constants {
     const val CHANNEL_ID_STICKY = "Ecom High"
     const val RUPPEE = "₹"
     var CUURENT_CART = MutableLiveData<CartResponse>()
-
-
 }

@@ -4,7 +4,6 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.tcs.ecom.api.OrderApi
 import com.tcs.ecom.models.SingleOrderResponse
-import kotlinx.coroutines.delay
 import retrofit2.HttpException
 import java.io.IOException
 import javax.inject.Inject
@@ -28,7 +27,7 @@ class OrderPaging @Inject constructor(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, SingleOrderResponse> {
         val position = params.key ?: PAGE_ONE
         return try {
-            delay(2000)
+            // delay(2000)
             val response = orderApi.getOrderOfThisUser(userId, position)
             if (response.isSuccessful && response.body() != null) {
                 LoadResult.Page(
@@ -45,5 +44,4 @@ class OrderPaging @Inject constructor(
             LoadResult.Error(e)
         }
     }
-
 }

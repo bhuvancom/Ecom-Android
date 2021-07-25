@@ -4,7 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.tcs.ecom.models.*
+import com.tcs.ecom.models.ApiError
+import com.tcs.ecom.models.CartResponse
+import com.tcs.ecom.models.OrderForm
+import com.tcs.ecom.models.Product
+import com.tcs.ecom.models.ProductForm
 import com.tcs.ecom.repository.CartRepository
 import com.tcs.ecom.utility.ApiResultState
 import com.tcs.ecom.utility.Constants
@@ -83,7 +87,6 @@ class CartViewModel @Inject constructor(private val cartRepository: CartReposito
                 }
             } catch (error: Exception) {
                 _cart.postValue(ApiResultState.ERROR(ApiError("${error.message}", 500)))
-
             }
         }
     }

@@ -1,6 +1,10 @@
 package com.tcs.ecom.ui.main.home
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.switchMap
+import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.tcs.ecom.models.Product
@@ -19,7 +23,7 @@ class ProductViewModel @Inject constructor(
     private val productRepository: ProductRepository,
 ) :
     ViewModel() {
-    private val currentSearch = MutableLiveData("")
+    val currentSearch = MutableLiveData("")
     private lateinit var result: LiveData<PagingData<Product>>
     val products
         get() = result

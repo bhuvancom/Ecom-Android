@@ -14,7 +14,7 @@ Date    7/18/2021
 Time    9:03 PM
 Project Ecom
  */
-class ProductLoadStateAdapter(private val retry: () -> Unit) :
+class ProductLoadStateAdapter(private inline val retry: () -> Unit) :
     LoadStateAdapter<ProductLoadStateAdapter.LoadStateViewHolder>() {
 
     inner class LoadStateViewHolder(private val binding: ProductLoadLayoutBinding) :
@@ -36,7 +36,6 @@ class ProductLoadStateAdapter(private val retry: () -> Unit) :
 
     override fun onBindViewHolder(holder: LoadStateViewHolder, loadState: LoadState) =
         holder.bind(loadState)
-
 
     override fun onCreateViewHolder(parent: ViewGroup, loadState: LoadState): LoadStateViewHolder {
         val binding = ProductLoadLayoutBinding.inflate(

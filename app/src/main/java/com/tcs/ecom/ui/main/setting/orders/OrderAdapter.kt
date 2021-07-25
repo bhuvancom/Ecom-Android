@@ -16,7 +16,7 @@ Date    7/23/2021
 Time    10:48 PM
 Project Ecom
  */
-class OrderAdapter(private val onClick: (SingleOrderResponse) -> Unit) :
+class OrderAdapter(private inline val onClick: (SingleOrderResponse) -> Unit) :
     PagingDataAdapter<SingleOrderResponse, OrderAdapter.OrderViewHolder>(orderList) {
 
     inner class OrderViewHolder(private val itemOrdersBinding: ItemOrdersBinding) :
@@ -62,7 +62,6 @@ class OrderAdapter(private val onClick: (SingleOrderResponse) -> Unit) :
                 oldItem: SingleOrderResponse,
                 newItem: SingleOrderResponse
             ): Boolean = oldItem == newItem
-
         }
 
         private const val TAG = "OrderAdapter"

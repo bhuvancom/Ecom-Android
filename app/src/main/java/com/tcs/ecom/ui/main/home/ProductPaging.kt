@@ -5,7 +5,6 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.tcs.ecom.api.ProductApi
 import com.tcs.ecom.models.Product
-import kotlinx.coroutines.delay
 import retrofit2.HttpException
 import java.io.IOException
 import javax.inject.Inject
@@ -27,7 +26,7 @@ class ProductPaging @Inject constructor(
         val position = params.key ?: PAGE_ONE
         return try {
             Log.d(TAG, "load: in load ${params.loadSize} key $params")
-            delay(2000L)
+            // delay(2000L)
             val response = productRepository.getProduct(searchQuery, position, params.loadSize)
             if (response.isSuccessful && response.body() != null) {
                 LoadResult.Page(
@@ -38,13 +37,11 @@ class ProductPaging @Inject constructor(
             } else {
                 LoadResult.Error(RuntimeException("Error Getting products ${response.code()}"))
             }
-
         } catch (ex: IOException) {
             LoadResult.Error(ex)
         } catch (e: HttpException) {
             LoadResult.Error(e)
         }
-
     }
 
     companion object {
@@ -54,5 +51,4 @@ class ProductPaging @Inject constructor(
     override fun getRefreshKey(state: PagingState<Int, Product>): Int? {
         return state.anchorPosition
     }
-
 }

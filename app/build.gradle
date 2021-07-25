@@ -7,6 +7,8 @@ plugins {
 apply plugin: 'kotlin-android-extensions'
 apply plugin: "androidx.navigation.safeargs"
 
+apply from: "$project.rootDir/spotless.gradle"
+
 def getBackendUrl(){
     return findProperty('STRIPE_PAYMENTSHEET_BACKEND_URL') ?: ""
 }
@@ -124,7 +126,7 @@ dependencies {
     implementation "androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03"
 
     // Paging 3
-    def pagingVersion = '3.1.0-alpha02'
+    def pagingVersion = '3.1.0-alpha03'
     implementation "androidx.paging:paging-runtime-ktx:$pagingVersion"
 
     implementation "com.stripe:stripe-android:$versions.stripe"
@@ -134,4 +136,9 @@ dependencies {
 
 kapt {
     correctErrorTypes true
+}
+compileKotlin {
+    kotlinOptions {
+        freeCompilerArgs = ["-Xinline-classes"]
+    }
 }

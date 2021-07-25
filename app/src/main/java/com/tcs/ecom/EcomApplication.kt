@@ -3,14 +3,9 @@ package com.tcs.ecom
 import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.content.Context
-import android.net.wifi.WifiManager
 import android.os.Build
-import android.text.format.Formatter
-import android.util.Log
 import com.tcs.ecom.utility.Constants
 import dagger.hilt.android.HiltAndroidApp
-
 
 /**
 @author Bhuvaneshvar
@@ -24,17 +19,9 @@ class EcomApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         createNotificationChannels()
-        val wifiManager = applicationContext.getSystemService(Context.WIFI_SERVICE) as? WifiManager
-        if (wifiManager != null && wifiManager.isWifiEnabled) {
-            ip = Formatter.formatIpAddress(wifiManager.connectionInfo.ipAddress)
-        }
-
-        Log.d(TAG, "onCreate: $ip")
     }
 
     companion object {
-        var ip = ""
-
         private const val TAG = "EcomApplication"
     }
 

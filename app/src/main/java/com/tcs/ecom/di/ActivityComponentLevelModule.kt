@@ -23,7 +23,8 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object ActivityComponentLevelModule {
-    private val BASE_URL = "http://192.168.1.100:5000/api/"
+    private val BASE_URL =
+        listOf("http://192.168.1.100:5000/api/", "https://bhuvancom.herokuapp.com/api/")
 
     @Provides
     @Singleton
@@ -46,7 +47,7 @@ object ActivityComponentLevelModule {
     @Singleton
     fun providesRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .baseUrl(BASE_URL)
+            .baseUrl(BASE_URL[0])
             .addConverterFactory(GsonConverterFactory.create())
             .client(okHttpClient)
             .build()

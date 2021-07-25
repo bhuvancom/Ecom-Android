@@ -62,7 +62,6 @@ class ProfileFragment : BottomSheetDialogFragment() {
                                     handleUpdate()
                                 },
                                 onNo = {
-
                                 },
                                 "Error Updating",
                                 apiState.apiError.reason + "\nRetry?"
@@ -75,7 +74,6 @@ class ProfileFragment : BottomSheetDialogFragment() {
                             }
                         }
                         is ApiResultState.START -> {
-
                         }
                         is ApiResultState.SUCCESS -> {
                             Toast.makeText(requireContext(), "Update successful", Toast.LENGTH_LONG)
@@ -84,7 +82,6 @@ class ProfileFragment : BottomSheetDialogFragment() {
                             dismiss()
                         }
                     }
-
                 }
             }
         }

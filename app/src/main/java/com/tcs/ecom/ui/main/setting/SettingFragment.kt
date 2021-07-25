@@ -10,7 +10,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.tcs.ecom.R
 import com.tcs.ecom.databinding.FragmentSettingBinding
 import com.tcs.ecom.models.Screen
-import com.tcs.ecom.models.Screen.*
+import com.tcs.ecom.models.Screen.LOGOUT
+import com.tcs.ecom.models.Screen.ORDERS
+import com.tcs.ecom.models.Screen.PROFILE
 import com.tcs.ecom.models.SettingsModel
 import com.tcs.ecom.utility.Constants
 import dagger.hilt.android.AndroidEntryPoint
@@ -36,7 +38,7 @@ class SettingFragment : Fragment(R.layout.fragment_setting) {
             ),
             SettingsModel(
                 "Profile",
-                "Tap to open your profile",
+                "Tap to view/update your profile",
                 PROFILE
             ),
             SettingsModel(
@@ -48,9 +50,12 @@ class SettingFragment : Fragment(R.layout.fragment_setting) {
     private var _binding: FragmentSettingBinding? = null
     private val binding get() = _binding!!
     private val settingsAdapter by lazy {
-        SettingsAdapter(onClick = {
-            handleScreen(it)
-        }, list)
+        SettingsAdapter(
+            onClick = {
+                handleScreen(it)
+            },
+            list
+        )
     }
 
     private fun handleScreen(screen: Screen) {
