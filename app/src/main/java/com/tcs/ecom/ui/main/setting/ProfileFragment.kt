@@ -32,7 +32,6 @@ Project Ecom
  */
 @AndroidEntryPoint
 class ProfileFragment : BottomSheetDialogFragment() {
-
     private var binding: BottomSheetProfileBinding? = null
     private val args by navArgs<ProfileFragmentArgs>()
     private val authViewModel by viewModels<AuthenticationViewModel>()
