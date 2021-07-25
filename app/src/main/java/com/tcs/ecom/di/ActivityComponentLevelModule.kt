@@ -39,7 +39,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object ActivityComponentLevelModule {
     private val BASE_URL =
-        listOf("http://192.168.1.100:5000/api/", "https://bhuvancom.herokuapp.com/api/")
+        listOf("http://192.168.1.101:5000/api/", "https://bhuvancom.herokuapp.com/api/")
 
     @Provides
     @Singleton

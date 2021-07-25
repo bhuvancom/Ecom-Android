@@ -95,7 +95,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                         override fun run() {
                             CoroutineScope(Dispatchers.Main).launch {
                                 s?.let {
-                                    productViewModel.setSearch(it.toString())
+                                    if (s.toString().isBlank() || s.length > 2)
+                                        productViewModel.setSearch(it.toString())
                                 }
                             }
                         }
