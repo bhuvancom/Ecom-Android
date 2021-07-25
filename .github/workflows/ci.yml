@@ -10,6 +10,9 @@ on:
       - master
   pull_request:
 
+  workflow_request:
+    - build
+
 jobs:
   build:
     runs-on: ubuntu-latest
