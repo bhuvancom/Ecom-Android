@@ -7,11 +7,11 @@
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.tcs.ecom.ui.auth.LoginFragment"
-        tools:layout="@layout/fragment_login"
-        android:label="Login" />
+        android:label="Login"
+        tools:layout="@layout/fragment_login" />
     <fragment
         android:id="@+id/registrationFragment"
         android:name="com.tcs.ecom.ui.auth.RegistrationFragment"
-        tools:layout="@layout/fragment_registration"
-        android:label="Registration" />
+        android:label="Registration"
+        tools:layout="@layout/fragment_registration" />
 </navigation>

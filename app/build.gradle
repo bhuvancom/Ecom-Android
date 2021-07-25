@@ -9,7 +9,7 @@ apply plugin: "androidx.navigation.safeargs"
 
 apply from: "$project.rootDir/spotless.gradle"
 
-def getBackendUrl(){
+def getBackendUrl() {
     return findProperty('STRIPE_PAYMENTSHEET_BACKEND_URL') ?: ""
 }
 
