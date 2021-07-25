@@ -9,9 +9,15 @@ on:
     branches:
       - master
   pull_request:
-
+    branches:
+      - master
+      - main
   workflow_dispatch:
-    - build
+    inputs:
+      Name:
+        description: 'Your Name'
+        required: true
+        default: 'Bhuvaneshvar'
 
 jobs:
   build:
