@@ -42,6 +42,7 @@ versions.timber = "4.7.1"
 versions.transition = "1.3.0"
 versions.truth = "1.0.1"
 versions.work = "2.4.0"
+versions.stripe = "17.0.0"
 ext.versions = versions
 
 def build_versions = [:]
@@ -196,6 +197,11 @@ work.firebase = "androidx.work:work-firebase:$versions.work"
 work.runtime_ktx = "androidx.work:work-runtime-ktx:$versions.work"
 deps.work = work
 
+def stripe = [:]
+stripe.stripe = "com.stripe:stripe-android:$versions.stripe"
+deps.stripe = stripe
+
+
 ext.deps = deps
 
 def addRepos(RepositoryHandler handler) {
@@ -203,4 +209,5 @@ def addRepos(RepositoryHandler handler) {
     handler.jcenter()
     handler.maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
 }
+
 ext.addRepos = this.&addRepos

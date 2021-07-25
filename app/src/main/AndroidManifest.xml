@@ -13,6 +13,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Ecom"
         android:usesCleartextTraffic="true">
+
+        <meta-data
+            android:name="com.stripe.android.paymentsheet.example.metadata.backend_url"
+            android:value="${BACKEND_URL}" />
+
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait">

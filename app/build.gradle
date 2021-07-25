@@ -7,6 +7,10 @@ plugins {
 apply plugin: 'kotlin-android-extensions'
 apply plugin: "androidx.navigation.safeargs"
 
+def getBackendUrl(){
+    return findProperty('STRIPE_PAYMENTSHEET_BACKEND_URL') ?: ""
+}
+
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
@@ -19,6 +23,9 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        manifestPlaceholders = [
+                BACKEND_URL: getBackendUrl()
+        ]
     }
 
     buildTypes {
@@ -99,6 +106,9 @@ dependencies {
     // Paging 3
     def pagingVersion = '3.1.0-alpha02'
     implementation "androidx.paging:paging-runtime-ktx:$pagingVersion"
+
+    implementation deps.stripe
+
 
 }
 

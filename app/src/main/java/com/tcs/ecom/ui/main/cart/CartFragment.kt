@@ -78,6 +78,10 @@ class CartFragment : Fragment(R.layout.fragment_cart) {
         val itemTouchHelper = ItemTouchHelper(swipe)
         itemTouchHelper.attachToRecyclerView(binding.rvCart)
 
+        binding.btnCheckout.setOnClickListener {
+
+        }
+
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.RESUMED) {
                 cartViewModel.retry()
@@ -106,6 +110,7 @@ class CartFragment : Fragment(R.layout.fragment_cart) {
                     }
 
                     if (it is ApiResultState.SUCCESS) {
+                        binding.tvMiddle.text = getString(R.string.no_item_in_cart)
                         cartAdapter.submitList(it.result.cartItems)
                         binding.tvMiddle.isVisible = it.result.cartItems.isNullOrEmpty()
                         binding.rvCart.isVisible = it.result.cartItems.isNotEmpty()
@@ -115,6 +120,8 @@ class CartFragment : Fragment(R.layout.fragment_cart) {
                 }
             }
         }
+
+
     }
 
     companion object {
