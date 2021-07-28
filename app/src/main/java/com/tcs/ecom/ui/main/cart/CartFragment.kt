@@ -16,6 +16,7 @@
 package com.tcs.ecom.ui.main.cart
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -26,12 +27,19 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.stripe.android.PaymentConfiguration
+import com.stripe.android.paymentsheet.PaymentSheet
+import com.stripe.android.paymentsheet.PaymentSheetResult
+import com.tcs.ecom.BuildConfig
 import com.tcs.ecom.R
 import com.tcs.ecom.databinding.FragmentCartBinding
+import com.tcs.ecom.models.Payment
+import com.tcs.ecom.models.ProductForm
 import com.tcs.ecom.utility.ApiResultState
 import com.tcs.ecom.utility.Constants
 import com.tcs.ecom.utility.Util
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 /**
@@ -48,7 +56,8 @@ class CartFragment : Fragment(R.layout.fragment_cart) {
     private val cartAdapter by lazy {
         CartAdapter()
     }
-
+    private lateinit var pymentSheet: PaymentSheet
+    private var isPaymnetSheenShown = false
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentCartBinding.bind(view)
@@ -87,8 +96,51 @@ class CartFragment : Fragment(R.layout.fragment_cart) {
         val itemTouchHelper = ItemTouchHelper(swipe)
         itemTouchHelper.attachToRecyclerView(binding.rvCart)
 
-        binding.btnCheckout.setOnClickListener {
+        PaymentConfiguration.init(
+            requireContext(),
+            BuildConfig.STRIPE_KEY
+        )
+        pymentSheet = PaymentSheet(this@CartFragment) {
+            onPaymentSheetResult(it)
         }
+
+        binding.btnCheckout.setOnClickListener {
+            Constants.CUURENT_CART.value?.let {
+                val productForm = ProductForm(
+                    it.cartItems,
+                    it.users
+                )
+                cartViewModel.makePayment(productForm)
+                lifecycleScope.launchWhenCreated {
+                    cartViewModel.paymentResponse.collectLatest { paymentState ->
+                        when (paymentState) {
+                            is ApiResultState.LOADING -> {
+                                Log.d(TAG, "setupRecyclerView loading")
+                                isPaymnetSheenShown = false
+                            }
+                            is ApiResultState.ERROR -> {
+                                Log.d(TAG, "setupRecyclerView: error ${paymentState.apiError}")
+                                isPaymnetSheenShown = false
+                                Util.showAlert(
+                                    requireContext(),
+                                    {
+                                        cartViewModel.makePayment(productForm)
+                                    },
+                                    {},
+                                    "Payment Failed",
+                                    "The last attempt to payment got failed"
+                                )
+                            }
+                            is ApiResultState.SUCCESS -> {
+                                Log.d(TAG, "setupRecyclerView: success ${paymentState.result}")
+                                if (!isPaymnetSheenShown) presentPaymentSheet(paymentState.result)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
 
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.RESUMED) {
@@ -126,6 +178,40 @@ class CartFragment : Fragment(R.layout.fragment_cart) {
                             "Checkout ${Constants.RUPPEE} ${it.result.totalCartPrice}"
                     }
                 }
+            }
+        }
+    }
+
+    private fun presentPaymentSheet(result: Payment) {
+        isPaymnetSheenShown = true
+        Log.d(TAG, "presentPaymentSheet: ")
+        pymentSheet.presentWithPaymentIntent(
+            result.paymentIntent,
+            PaymentSheet.Configuration(
+                merchantDisplayName = "Bhuvancom",
+                customer = PaymentSheet.CustomerConfiguration(
+                    id = result.customer,
+                    ephemeralKeySecret = result.ephemeralKey
+                )
+            )
+        )
+    }
+
+    private fun onPaymentSheetResult(paymentResult: PaymentSheetResult) {
+        when (paymentResult) {
+            PaymentSheetResult.Completed -> {
+                Util.showToast(requireContext(), "Success")
+                Log.d(TAG, "onPaymentSheetResult: $paymentResult")
+                isPaymnetSheenShown = true
+                // todo now call order and and fetch fresh cart, there in order after order is complete, clean this cart there
+            }
+            PaymentSheetResult.Canceled -> {
+                Log.d(TAG, "onPaymentSheetResult: $paymentResult")
+                isPaymnetSheenShown = false
+            }
+            is PaymentSheetResult.Failed -> {
+                Log.d(TAG, "onPaymentSheetResult: failed ${paymentResult.error}")
+                isPaymnetSheenShown = false
             }
         }
     }

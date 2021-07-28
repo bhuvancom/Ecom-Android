@@ -16,6 +16,7 @@
 package com.tcs.ecom.api
 
 import com.tcs.ecom.models.CartResponse
+import com.tcs.ecom.models.Payment
 import com.tcs.ecom.models.ProductForm
 import retrofit2.Response
 import retrofit2.http.Body
@@ -35,4 +36,7 @@ interface CartApi {
 
     @POST("cart")
     suspend fun saveCart(@Body productForm: ProductForm): Response<CartResponse>
+
+    @POST("orders/payment")
+    suspend fun makePayment(@Body productForm: ProductForm): Response<Payment>
 }

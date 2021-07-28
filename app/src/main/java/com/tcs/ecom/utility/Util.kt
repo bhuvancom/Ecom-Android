@@ -133,9 +133,10 @@ object Util {
         onYes: () -> Unit,
         onNo: () -> Unit,
         title: String,
-        message: String
+        message: String,
+        onExit: (() -> Unit)? = null
     ) {
-        AlertDialog.Builder(context)
+        val dialog = AlertDialog.Builder(context)
             .setPositiveButton("Proceed") { w, _ ->
                 onYes()
                 w.dismiss()
@@ -147,6 +148,11 @@ object Util {
             .setCancelable(false)
             .setTitle(title)
             .setMessage(message)
-            .show()
+        if (onExit != null) {
+            dialog.setNeutralButton("Exit") { w, v ->
+                onExit.invoke()
+            }
+        }
+        dialog.show()
     }
 }

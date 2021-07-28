@@ -19,6 +19,7 @@ import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.os.Build
+import com.stripe.android.PaymentConfiguration
 import com.tcs.ecom.utility.Constants
 import dagger.hilt.android.HiltAndroidApp
 
@@ -34,6 +35,11 @@ class EcomApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         createNotificationChannels()
+        
+        PaymentConfiguration.init(
+            applicationContext,
+            BuildConfig.STRIPE_KEY
+        )
     }
 
     companion object {

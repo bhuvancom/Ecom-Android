@@ -94,6 +94,12 @@ class RegistrationFragment : Fragment(R.layout.fragment_registration) {
         val email = binding.etEmail.editText?.text.toString()
         val password = binding.etPassword.editText?.text.toString()
         val address = binding.etDefaultAddress.editText?.text.toString()
+        val name = binding.etName.editText?.text.toString()
+        if (name.isBlank()) {
+            binding.etName.error = "Please enter the Name"
+        }
+        binding.etName.isErrorEnabled = false
+
         val regex =
             Regex(
                 "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})\$",

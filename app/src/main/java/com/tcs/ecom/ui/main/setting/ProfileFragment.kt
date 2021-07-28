@@ -107,7 +107,7 @@ class ProfileFragment : BottomSheetDialogFragment() {
             }
             tvEmail.text = args.user.email
             etAddress.editText!!.setText(args.user.address)
-
+            etName.editText!!.setText(args.user.userName)
             animateTo(etAddress, checkboxAddress.isChecked)
             animateTo(etNewPassword, checkboxPassword.isChecked)
 
@@ -154,7 +154,14 @@ class ProfileFragment : BottomSheetDialogFragment() {
                 Util.showToast(requireContext(), "Please enter current password")
                 return
             }
+            val userName = etName.editText!!.text.toString().trim()
+            if (userName.isBlank()) {
+                Util.showToast(requireContext(), "Please enter the name")
+                return
+            }
+
             var user = args.user
+            user = user.copy(userName = userName)
             when {
                 checkboxAddress.isChecked && checkboxPassword.isChecked -> {
                     val newPassword = etNewPassword.editText!!.text.toString().trim()

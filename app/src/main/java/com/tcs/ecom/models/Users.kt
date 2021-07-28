@@ -28,5 +28,7 @@ data class Users(
     @SerializedName("userPassword")
     var password: String = "",
     @SerializedName("address")
-    var address: String = ""
+    var address: String = "",
+    @SerializedName("userName")
+    var userName: String = ""
 ) : Parcelable

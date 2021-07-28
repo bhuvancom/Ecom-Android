@@ -2,6 +2,7 @@
 buildscript {
     ext.kotlin_version = "1.5.10"
     apply from: 'versions.gradle'
+
     ext.dokkaVersion = '1.5.0'
     repositories {
         google()
@@ -22,6 +23,7 @@ buildscript {
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
+    //apply from : 'spotless.gradle'
 }
 
 
@@ -32,7 +34,6 @@ allprojects {
     }
 
     apply plugin: "org.jlleitschuh.gradle.ktlint"
-
     task checkstyle(type: Checkstyle) {
         showViolations = true
         configFile file("../settings/checkstyle.xml")
@@ -46,4 +47,7 @@ allprojects {
         // empty classpath
         classpath = files()
     }
+
+    apply plugin: "com.diffplug.gradle.spotless"
+
 }

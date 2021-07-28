@@ -22,6 +22,7 @@ import androidx.lifecycle.viewModelScope
 import com.tcs.ecom.models.ApiError
 import com.tcs.ecom.models.CartResponse
 import com.tcs.ecom.models.OrderForm
+import com.tcs.ecom.models.Payment
 import com.tcs.ecom.models.Product
 import com.tcs.ecom.models.ProductForm
 import com.tcs.ecom.repository.CartRepository
@@ -29,6 +30,8 @@ import com.tcs.ecom.utility.ApiResultState
 import com.tcs.ecom.utility.Constants
 import com.tcs.ecom.utility.Util
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -46,6 +49,8 @@ class CartViewModel @Inject constructor(private val cartRepository: CartReposito
 
     private val _cart = MutableLiveData<ApiResultState<CartResponse>>()
     val cart: LiveData<ApiResultState<CartResponse>> get() = _cart
+    private val _paymnetResponse = MutableStateFlow<ApiResultState<Payment>>(ApiResultState.START)
+    val paymentResponse = _paymnetResponse.asStateFlow()
 
     init {
         loadInitialCart()
@@ -53,6 +58,16 @@ class CartViewModel @Inject constructor(private val cartRepository: CartReposito
 
     fun retry() {
         loadInitialCart()
+    }
+
+    fun makePayment(productForm: ProductForm) {
+        viewModelScope.launch {
+            _paymnetResponse.emit(
+                Util.doSafeCall {
+                    cartRepository.makePayment(productForm)
+                }
+            )
+        }
     }
 
     private fun loadInitialCart() {

@@ -29,4 +29,5 @@ Project Ecom
 class CartRepository @Inject constructor(private val cartApi: CartApi) {
     suspend fun upsertCart(productForm: ProductForm) = cartApi.saveCart(productForm)
     suspend fun getCart(userId: Long) = cartApi.getThisUserCart(userId)
+    suspend fun makePayment(productForm: ProductForm) = cartApi.makePayment(productForm)
 }

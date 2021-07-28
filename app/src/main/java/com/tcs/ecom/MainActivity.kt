@@ -87,8 +87,11 @@ class MainActivity : AppCompatActivity() {
                                 onNo = {
                                     openAuth()
                                 },
-                                "Error Login With saved details",
-                                it.apiError.reason + "\nRetry? on cancel to open login screen"
+                                onExit = {
+                                    finish()
+                                },
+                                title = "Error Login With saved details",
+                                message = it.apiError.reason + "\nRetry? on cancel to open login screen"
                             )
                         }
                         is ApiResultState.LOADING -> {
