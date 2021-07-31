@@ -36,8 +36,8 @@ jobs:
         run: mkdir -p ~/.gradle ; cp .github/ci-gradle.properties ~/.gradle/gradle.properties
 
       - uses: actions/cache@v2
-          with:
-            path: |
+        with:
+          path: |
               ~/.gradle/caches
               ~/.gradle/wrapper
             key: ${{ runner.os }}-${{ hashFiles('**/*.gradle*') }}-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }}-${{ hashFiles('**/buildSrc/**/*.kt') }}
