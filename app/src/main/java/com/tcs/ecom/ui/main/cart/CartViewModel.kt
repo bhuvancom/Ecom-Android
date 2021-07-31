@@ -25,6 +25,8 @@ import com.tcs.ecom.models.OrderForm
 import com.tcs.ecom.models.Payment
 import com.tcs.ecom.models.Product
 import com.tcs.ecom.models.ProductForm
+import com.tcs.ecom.models.SingleOrderResponse
+import com.tcs.ecom.models.Users
 import com.tcs.ecom.repository.CartRepository
 import com.tcs.ecom.utility.ApiResultState
 import com.tcs.ecom.utility.Constants
@@ -49,8 +51,8 @@ class CartViewModel @Inject constructor(private val cartRepository: CartReposito
 
     private val _cart = MutableLiveData<ApiResultState<CartResponse>>()
     val cart: LiveData<ApiResultState<CartResponse>> get() = _cart
-    private val _paymnetResponse = MutableStateFlow<ApiResultState<Payment>>(ApiResultState.START)
-    val paymentResponse = _paymnetResponse.asStateFlow()
+    private val _paymentResponse = MutableStateFlow<ApiResultState<Payment>>(ApiResultState.START)
+    val paymentResponse = _paymentResponse.asStateFlow()
 
     init {
         loadInitialCart()
@@ -60,11 +62,11 @@ class CartViewModel @Inject constructor(private val cartRepository: CartReposito
         loadInitialCart()
     }
 
-    fun makePayment(productForm: ProductForm) {
+    fun makePayment(user: Users) {
         viewModelScope.launch {
-            _paymnetResponse.emit(
+            _paymentResponse.emit(
                 Util.doSafeCall {
-                    cartRepository.makePayment(productForm)
+                    cartRepository.makePayment(user)
                 }
             )
         }
@@ -148,6 +150,17 @@ class CartViewModel @Inject constructor(private val cartRepository: CartReposito
                 removeProductFromCart.users
             )
             upserCart(productForm)
+        }
+    }
+    private val _doOrderResponse = MutableLiveData<ApiResultState<SingleOrderResponse>>()
+    val doOrderResponse: LiveData<ApiResultState<SingleOrderResponse>> = _doOrderResponse
+
+
+    fun doOrder(orderForm: ProductForm) {
+        viewModelScope.launch {
+            _doOrderResponse.value = Util.doSafeCall {
+                cartRepository.doOrder(orderForm)
+            }
         }
     }
 }

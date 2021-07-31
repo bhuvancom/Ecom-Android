@@ -57,12 +57,14 @@ class CartFragment : Fragment(R.layout.fragment_cart) {
         CartAdapter()
     }
     private lateinit var pymentSheet: PaymentSheet
-    private var isPaymnetSheenShown = false
+    private var isPaymentSheenShown = false
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentCartBinding.bind(view)
         setupRecyclerView()
     }
+
+    lateinit var paymentKey: String
 
     private fun setupRecyclerView() {
         binding.rvCart.apply {
@@ -110,30 +112,30 @@ class CartFragment : Fragment(R.layout.fragment_cart) {
                     it.cartItems,
                     it.users
                 )
-                cartViewModel.makePayment(productForm)
+                cartViewModel.makePayment(Constants.CURRENT_USER.value!!)
                 lifecycleScope.launchWhenCreated {
                     cartViewModel.paymentResponse.collectLatest { paymentState ->
                         when (paymentState) {
                             is ApiResultState.LOADING -> {
                                 Log.d(TAG, "setupRecyclerView loading")
-                                isPaymnetSheenShown = false
+                                isPaymentSheenShown = false
                             }
                             is ApiResultState.ERROR -> {
                                 Log.d(TAG, "setupRecyclerView: error ${paymentState.apiError}")
-                                isPaymnetSheenShown = false
+                                isPaymentSheenShown = false
                                 Util.showAlert(
                                     requireContext(),
                                     {
-                                        cartViewModel.makePayment(productForm)
+                                        cartViewModel.makePayment(Constants.CURRENT_USER.value!!)
                                     },
                                     {},
                                     "Payment Failed",
-                                    "The last attempt to payment got failed"
+                                    "The last attempt to payment got failed ${paymentState.apiError.reason}"
                                 )
                             }
                             is ApiResultState.SUCCESS -> {
                                 Log.d(TAG, "setupRecyclerView: success ${paymentState.result}")
-                                if (!isPaymnetSheenShown) presentPaymentSheet(paymentState.result)
+                                if (!isPaymentSheenShown) presentPaymentSheet(paymentState.result)
                             }
                         }
                     }
@@ -183,7 +185,8 @@ class CartFragment : Fragment(R.layout.fragment_cart) {
     }
 
     private fun presentPaymentSheet(result: Payment) {
-        isPaymnetSheenShown = true
+        paymentKey = result.ephemeralKey
+        isPaymentSheenShown = true
         Log.d(TAG, "presentPaymentSheet: ")
         pymentSheet.presentWithPaymentIntent(
             result.paymentIntent,
@@ -202,16 +205,18 @@ class CartFragment : Fragment(R.layout.fragment_cart) {
             PaymentSheetResult.Completed -> {
                 Util.showToast(requireContext(), "Success")
                 Log.d(TAG, "onPaymentSheetResult: $paymentResult")
-                isPaymnetSheenShown = true
-                // todo now call order and and fetch fresh cart, there in order after order is complete, clean this cart there
+                isPaymentSheenShown = true
+                val orderForm =
+                    ProductForm(users = Constants.CURRENT_USER.value!!, paymentId = paymentKey)
+                cartViewModel.doOrder(orderForm)
             }
             PaymentSheetResult.Canceled -> {
                 Log.d(TAG, "onPaymentSheetResult: $paymentResult")
-                isPaymnetSheenShown = false
+                isPaymentSheenShown = false
             }
             is PaymentSheetResult.Failed -> {
                 Log.d(TAG, "onPaymentSheetResult: failed ${paymentResult.error}")
-                isPaymnetSheenShown = false
+                isPaymentSheenShown = false
             }
         }
     }

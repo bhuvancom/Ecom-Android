@@ -17,6 +17,7 @@ package com.tcs.ecom.repository
 
 import com.tcs.ecom.api.CartApi
 import com.tcs.ecom.models.ProductForm
+import com.tcs.ecom.models.Users
 import javax.inject.Inject
 
 /**
@@ -29,5 +30,6 @@ Project Ecom
 class CartRepository @Inject constructor(private val cartApi: CartApi) {
     suspend fun upsertCart(productForm: ProductForm) = cartApi.saveCart(productForm)
     suspend fun getCart(userId: Long) = cartApi.getThisUserCart(userId)
-    suspend fun makePayment(productForm: ProductForm) = cartApi.makePayment(productForm)
+    suspend fun makePayment(user: Users) = cartApi.makePayment(user)
+    suspend fun doOrder(orderForm: ProductForm) = cartApi.doOrder(orderForm)
 }

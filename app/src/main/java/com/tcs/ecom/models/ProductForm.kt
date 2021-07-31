@@ -27,5 +27,6 @@ data class ProductForm(
     @SerializedName("productOrders")
     val productOrders: MutableList<OrderForm> = mutableListOf(),
     @SerializedName("user")
-    val users: Users
+    val users: Users,
+    var paymentId: String = ""
 )

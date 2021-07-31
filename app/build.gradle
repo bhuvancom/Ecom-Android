@@ -19,7 +19,7 @@ android {
 
     defaultConfig {
         buildConfigField  "String", "STRIPE_KEY", STRIPE_PUBLISHABLE_KEY
-        buildConfigField  "String", "STRIPE_SECRET_KEY", STRIPE_SECRET_KEY
+        buildConfigField  "String", "URL" , STRIPE_PAYMENTSHEET_BACKEND_URL
         applicationId "com.tcs.ecom"
         minSdkVersion 26
         targetSdkVersion 30

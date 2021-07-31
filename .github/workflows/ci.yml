@@ -27,9 +27,22 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Add secrets in gradle.properties
+        env:
+          STRIPE: ${{ secrets.STRIPE_KEY }}
+        run: echo STRIPE_PUBLISHABLE_KEY=\"$STRIPE\" > ./gradle.properties
 
       - name: Copy CI gradle.properties
         run: mkdir -p ~/.gradle ; cp .github/ci-gradle.properties ~/.gradle/gradle.properties
+
+      - uses: actions/cache@v2
+          with:
+            path: |
+              ~/.gradle/caches
+              ~/.gradle/wrapper
+            key: ${{ runner.os }}-${{ hashFiles('**/*.gradle*') }}-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }}-${{ hashFiles('**/buildSrc/**/*.kt') }}
+      - name: Copy gradle
+        run: mkdir -p ~/.gradle; cp .github/ci-gradle.properties ~/.gradle/gradle.properties
 
       - name: Set up JDK 11
         uses: actions/setup-java@v1
@@ -40,6 +53,15 @@ jobs:
 
       - name: Build project
         run: ./gradlew spotlessCheck --stacktrace
+
+      - name: Build the debug app
+        run: ./gradlew assembleDebug
+
+      - name: Upload apk
+        uses: actions/upload-artifact@v2
+        with:
+          name: debug apk
+          path: app/build/outputs/apk/debug/app-debug.apk
 
       - name: Upload build outputs (APKs)
         uses: actions/upload-artifact@v2
@@ -54,37 +76,44 @@ jobs:
           name: build-reports
           path: app/build/reports
 
-  test:
-    needs: build
-    runs-on: macOS-latest # enables hardware acceleration in the virtual machine
-    timeout-minutes: 30
-    strategy:
-      matrix:
-        api-level: [23, 26, 29]
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Copy CI gradle.properties
-        run: mkdir -p ~/.gradle ; cp .github/ci-gradle.properties ~/.gradle/gradle.properties
-
-      - name: Set up JDK 11
-        uses: actions/setup-java@v1
-        with:
-          java-version: 11
-
-      #      - name: Run instrumentation tests
-      #        uses: reactivecircus/android-emulator-runner@v2
-      #        with:
-      #          api-level: ${{ matrix.api-level }}
-      #          arch: x86
-      #          disable-animations: true
-      #          script: ./gradlew connectedCheck --stacktrace
-
-      - name: Upload test reports
-        if: always()
-        uses: actions/upload-artifact@v2
-        with:
-          name: test-reports
-          path: app/build/reports
+#  release:
+#    runs-on: ubuntu-latest
+#    timeout-minutes: 30
+#
+#    steps:
+#      - name: Build the sign app
+#        uses: r0adkll/sign-android-release@v1
+#        id: sign
+#        with:
+#          releaseDirectory: app/build/outputs/apk/release
+#            signingKeyBase64: ${{ secrets.SIGNING_KEY }}
+#            alias: ${{ secrets.ALIAS }}
+#            keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
+#            keyPassword: ${{ secrets.KEY_STORE_PASSWORD }}
+#      - uses: actions/upload-artifact@v2
+#        with:
+#          name: release.apk
+#          path: ${{steps.sign.outputs.signedReleaseFile}}
+#
+#      - name: Get App version code
+#        id: version
+#        run: |
+#          echo "::set-output name=commits::$(git rev-list --count HEAD)"
+#      - name: Release
+#        id: create_release
+#        uses: actions/create-release@v1
+#        with:
+#          tag_name: ${{ steps.version.outputs.commits }}
+#          release_name: Release v.1.${{ steps.version.outputs.commits }}
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#      - name: Upload Release APK
+#        id: upload_release_asset
+#        uses: actions/upload-release-asset@v1.0.1
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#        with:
+#          upload_url: ${{ steps.create_release.outputs.upload_url }}
+#          asset_path: ${{steps.sign.outputs.signedReleaseFile}}
+#          asset_name: signed-app.apk
+#          asset_content_type: application/zip
