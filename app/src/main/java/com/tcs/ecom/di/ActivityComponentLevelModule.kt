@@ -65,7 +65,7 @@ object ActivityComponentLevelModule {
     @Singleton
     fun providesRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .baseUrl(if (BuildConfig.DEBUG) BASE_URL[0] else BuildConfig.URL)
+            .baseUrl(BuildConfig.URL)
             .addConverterFactory(GsonConverterFactory.create())
             .client(okHttpClient)
             .build()

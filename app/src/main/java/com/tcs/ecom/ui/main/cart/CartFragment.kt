@@ -108,10 +108,6 @@ class CartFragment : Fragment(R.layout.fragment_cart) {
 
         binding.btnCheckout.setOnClickListener {
             Constants.CUURENT_CART.value?.let {
-                val productForm = ProductForm(
-                    it.cartItems,
-                    it.users
-                )
                 cartViewModel.makePayment(Constants.CURRENT_USER.value!!)
                 lifecycleScope.launchWhenCreated {
                     cartViewModel.paymentResponse.collectLatest { paymentState ->
